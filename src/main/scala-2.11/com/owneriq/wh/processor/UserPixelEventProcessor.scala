@@ -24,21 +24,33 @@ object UserPixelEventProcessor {
     // The SparkContext for easy access
     val sc = spark.sparkContext
 
-    // Create the context with a 2 second batch size
-    val ssc = new StreamingContext(sc, Seconds(2))
+    // Create the context with a 5 second batch size
+    val ssc = new StreamingContext(sc, Seconds(5))
 
     // Create a HDFS stream on campaign_conversion_receipts
     //val lines = ssc.textFileStream("/Users/hsun/spark-test/streaming/")
     val lines = ssc.textFileStream("/user/hsun/test_data/campaign_conversion_receipts/")
 
     lines.foreachRDD(rdd => {
-      rdd.filter(_.trim().length > 0).map(_.split("\t"))
-        .map(p => convert(p)  )
-        .map(ccp => JsonDocument.create(
-          "userPixelEvent::" + ccp.sadnetuuid,
-          JsonObject.create()
-          .put("sadnetuuid", ccp.sadnetuuid)
-          .put("idadvertiserlineitem", ccp.idadvertiserlineitem))
+      rdd.filter(_.trim().length > 0)
+        .map(_.split("\t"))
+        .filter(_.length >= 10)
+        .map(p => convert(p))
+        .map(receipt =>
+          JsonDocument.create("userPixelEvent::" + receipt.sadnetuuid,
+            JsonObject.create()
+              .put("sadnetuuid", receipt.sadnetuuid)
+              .put("idadvertiserlineitem", receipt.idadvertiserlineitem)
+              .put("order_datestart", receipt.order_datestart)
+              .put("order_dateend", receipt.order_dateend)
+              .put("click_conversion_lookback", receipt.click_conversion_lookback)
+              .put("conversion_timestamp", receipt.conversion_timestamp)
+              .put("idconversionsegment", receipt.idconversionsegment.toString)
+              .put("conversion_type", receipt.conversion_type)
+              .put("isoptimized", receipt.isoptimized)
+              .put("view_conversion_lookback", receipt.view_conversion_lookback)
+              .put("pagestamp", receipt.pagestamp)
+          )
         )
         .saveToCouchbase()
     })
@@ -64,8 +76,6 @@ object UserPixelEventProcessor {
 
     if (p.length == 11)
       pagestamp = p(10).trim
-
-    p.foreach(println)
 
     CampaignConversionReceipt(p(0).toInt, p(1).trim, p(2).trim, p(3).toInt, p(4).trim, p(5).toInt, BigInt(p(6)), p(7).trim, p(8).toBoolean, p(9).toInt , pagestamp)
   }
