@@ -11,8 +11,8 @@ object UserPixelEventStreamingProcessor {
     val ssc = new StreamingContext(sc, Seconds(5))
 
     // Create a HDFS stream on campaign_conversion_receipts
-    val lines = ssc.textFileStream("/Users/hsun/spark-test/streaming/")
-    //val lines = ssc.textFileStream("/user/hsun/test_data/campaign_conversion_receipts/")
+    //val lines = ssc.textFileStream("/Users/hsun/spark-test/streaming/")
+    val lines = ssc.textFileStream("/user/hsun/test_data/campaign_conversion_receipts/")
 
     lines.foreachRDD(rdd => UserPixelEventProcessor.transformRDD(rdd).saveToCouchbase())
 
