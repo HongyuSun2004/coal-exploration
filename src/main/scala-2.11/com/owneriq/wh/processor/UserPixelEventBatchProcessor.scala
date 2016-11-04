@@ -14,7 +14,7 @@ object UserPixelEventBatchProcessor {
 
     val spark = SparkSession
       .builder()
-      .appName("UserPixelEventProcessor")
+      .appName("UserPixelEventBatchProcessor")
       //.master("local[*]")
       .config("spark.couchbase.nodes", "ec2-52-42-137-48.us-west-2.compute.amazonaws.com;ec2-52-39-179-8.us-west-2.compute.amazonaws.com;ec2-52-36-239-88.us-west-2.compute.amazonaws.com") // connect to couchbase server
       .config("spark.couchbase.bucket.whtest", "whtest") // open the whtest bucket with password
