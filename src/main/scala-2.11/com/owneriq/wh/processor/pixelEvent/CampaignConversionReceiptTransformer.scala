@@ -1,22 +1,10 @@
 package com.owneriq.wh.processor.pixelEvent
 
-import org.apache.spark.sql.SparkSession
 import org.apache.spark.rdd.RDD
 import com.couchbase.client.java.document.JsonDocument
 import com.couchbase.client.java.document.json.JsonObject
 
-
-object UserPixelEventProcessor {
-
-  def getSparkSession(appName: String): SparkSession = {
-    SparkSession
-      .builder()
-      .appName(appName)
-      //.master("local[*]")
-      .config("spark.couchbase.nodes", "ec2-52-42-137-48.us-west-2.compute.amazonaws.com;ec2-52-39-179-8.us-west-2.compute.amazonaws.com;ec2-52-36-239-88.us-west-2.compute.amazonaws.com") // connect to couchbase server
-      .config("spark.couchbase.bucket.whtest2", "whtest2") // open the whtest bucket with password
-      .getOrCreate()
-  }
+object CampaignConversionReceiptTransformer {
 
   def transformRDD(rdd : RDD[String]) : RDD[JsonDocument] = {
     rdd.filter(_.trim().length > 0)
@@ -58,4 +46,5 @@ object UserPixelEventProcessor {
 
     CampaignConversionReceipt(p(0).toInt, p(1).trim, p(2).trim, p(3).toInt, p(4).trim, p(5).toInt, BigInt(p(6)), p(7).trim, p(8).toBoolean, p(9).toInt , pagestamp)
   }
+
 }
