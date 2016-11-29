@@ -2,11 +2,16 @@ package com.owneriq.wh.transformer
 
 import com.owneriq.wh.model.auction.{Auction, Bid, Exchange}
 import com.owneriq.wh.model.campaign._
-import com.owneriq.wh.model.event.UserCampaignEvent
+import com.owneriq.wh.model.event.{UserCampaignEvent, UserCampaignEventGroup}
 import com.owneriq.wh.model.user.{Channel, Location, User}
 
 object UserCampaignTransformer extends TransformerTrait[UserCampaignEvent] {
 
+  /**
+    * Transform one line of HDFS file to a UserCampaignEvent object
+    * @param line one line of HDFS file
+    * @return UserCampaignEvent object
+    */
   override def transform(line: String): UserCampaignEvent = {
     def parseUser(t: Array[String]): User = {
       val id = t(18)
@@ -97,17 +102,16 @@ object UserCampaignTransformer extends TransformerTrait[UserCampaignEvent] {
 
   }
 
-//  import net.liftweb.json._
-//  import net.liftweb.json.Serialization.write
-//  implicit val formats = DefaultFormats
-//
-//  override def transformJson(userCampaignEvent: UserCampaignEvent): String = {
-//    val ser = write(userCampaignEvent)
-//    ser.toString
-//  }
-//
-//  override def transformJson(jsonString: String): UserCampaignEvent ={
-//    val jValue = parse(jsonString)
-//    jValue.extract[UserCampaignEvent]
-//  }
+  /**
+    * Transform a JSON string to a UserCampaignEventGroup object
+    * @param jsonString JSON string
+    * @return UserCampaignEventGroup object
+    */
+  override def transformJson(jsonString: String): UserCampaignEventGroup = {
+    import net.liftweb.json._
+    val jValue = parse(jsonString)
+    jValue.extract[UserCampaignEventGroup]
+  }
 }
+
+

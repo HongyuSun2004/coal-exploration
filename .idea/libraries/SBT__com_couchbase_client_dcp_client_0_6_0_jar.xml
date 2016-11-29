@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: com.couchbase.client:dcp-client:0.6.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.couchbase.client/dcp-client/jars/dcp-client-0.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.couchbase.client/dcp-client/srcs/dcp-client-0.6.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

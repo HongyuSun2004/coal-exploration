@@ -72,12 +72,10 @@ object UserPixelEventProcessor {
                     pagestamp: String)
 
   def convert(p: Array[String]) : CampaignConversionReceipt = {
-    var pagestamp = ""
 
-    if (p.length == 11)
-      pagestamp = p(10).trim
+    def getPageStamp() = if (p.length == 11) p(10).trim else ""
 
-    CampaignConversionReceipt(p(0).toInt, p(1).trim, p(2).trim, p(3).toInt, p(4).trim, p(5).toInt, BigInt(p(6)), p(7).trim, p(8).toBoolean, p(9).toInt , pagestamp)
+    CampaignConversionReceipt(p(0).toInt, p(1).trim, p(2).trim, p(3).toInt, p(4).trim, p(5).toInt, BigInt(p(6)), p(7).trim, p(8).toBoolean, p(9).toInt, getPageStamp)
   }
 
 }
